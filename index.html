@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Varsha!</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body, html { width:100%; height:100%; font-family: 'Great Vibes', cursive; background-color:#fff8f0; overflow-x:hidden; }
+.background { position: fixed; top:0; left:0; width:100%; height:100%; background: url('background.jpg') no-repeat center center/cover; opacity:0.3; z-index:-2; }
+#confetti { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+.container { display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+.message-container { max-width:800px; font-size:2em; color:#ff4d6d; line-height:1.8em; text-align:center; }
+.message-container img { max-width:100%; height:auto; border-radius:20px; margin:20px 0; box-shadow:0 5px 20px rgba(0,0,0,0.2); }
+@media (max-width:768px) { .message-container { font-size:1.5em; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="background"></div>
+    <canvas id="confetti"></canvas>
+    <div class="message-container" id="message-container"></div>
+</div>
+
+<script>
+// Complete heartfelt message
+const lines = [
+    "Dear Varsha, 💖",
+    "On your special day, I want you to know,",
+    "Our friendship means the world to me.",
+    "Every smile, every laugh, and even our quiet moments,",
+    "Have been blessings I will always treasure.",
+    "You inspire me, support me, and make life brighter!",
+    "<img src='varsha1.jpg' alt='Varsha Picture 1'>",
+    "I am so grateful for every memory we've shared,",
+    "I've realized that 'home' represents in a person",
+    "And for me, that feeling has always been with you.",
+    "I am excited for all the beautiful moments ahead.",
+    "You deserve endless happiness, love, and laughter.",
+    "<img src='varsha2.jpg' alt='Varsha Picture 2'>",
+    "Happy Birthday to my dearest friend! 🎂🎉",
+    "With all my heart,",
+    "Your friend 💖"
+];
+
+const container = document.getElementById('message-container');
+let lineIndex = 0;
+let charIndex = 0;
+
+// Letter-by-letter animation
+function typeLine() {
+    if (lineIndex >= lines.length) return;
+    const line = lines[lineIndex];
+
+    if (line.startsWith('<img')) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = line;
+        container.appendChild(tempDiv.firstChild);
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeLine, 500);
+        return;
+    }
+
+    if (charIndex === 0) {
+        const div = document.createElement('div');
+        div.setAttribute('id','currentLine');
+        container.appendChild(div);
+    }
+
+    const currentLine = document.getElementById('currentLine');
+    currentLine.innerHTML += line.charAt(charIndex);
+    charIndex++;
+
+    if (charIndex < line.length) {
+        setTimeout(typeLine, 80);
+    } else {
+        currentLine.removeAttribute('id');
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeLine, 600);
+    }
+}
+
+typeLine();
+
+// Confetti animation
+const canvas = document.getElementById('confetti');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const confettiCount = 100;
+const confetti = [];
+for(let i=0;i<confettiCount;i++){
+    confetti.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*6+2,
+        d: Math.random()*confettiCount,
+        color: `hsl(${Math.random()*360}, 100%, 50%)`,
+        tilt: Math.random()*10-10,
+        tiltAngleIncrement: Math.random()*0.07+0.05,
+        tiltAngle:0
+    });
+}
+
+function drawConfetti(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confetti.forEach(c=>{
+        ctx.beginPath();
+        ctx.lineWidth=c.r/2;
+        ctx.strokeStyle=c.color;
+        ctx.moveTo(c.x + c.tilt + c.r/4, c.y);
+        ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r/4);
+        ctx.stroke();
+    });
+    updateConfetti();
+}
+
+function updateConfetti(){
+    confetti.forEach(c=>{
+        c.tiltAngle += c.tiltAngleIncrement;
+        c.y += (Math.cos(c.d)+3+c.r/2)/2;
+        c.x += Math.sin(c.d);
+        c.tilt = Math.sin(c.tiltAngle)*15;
+        if(c.y > canvas.height){ c.x = Math.random()*canvas.width; c.y = -10; }
+    });
+}
+
+setInterval(drawConfetti,20);
+window.addEventListener('resize', ()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
